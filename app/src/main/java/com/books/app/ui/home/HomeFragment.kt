@@ -10,6 +10,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.books.app.R
 import com.books.app.data.BookItem
@@ -90,7 +91,7 @@ class HomeFragment:Fragment(R.layout.fragment_home), BannerAdapter.OnSlideClickL
         return result
     }
 
-    fun getNavigationBarHeight():Int {
+    private fun getNavigationBarHeight():Int {
         var result = 0
         val resourceId: Int = resources.getIdentifier("navigation_bar_height", "dimen", "android")
         if (resourceId > 0) {
@@ -100,11 +101,21 @@ class HomeFragment:Fragment(R.layout.fragment_home), BannerAdapter.OnSlideClickL
     }
 
     override fun onSlideClick(bookId: Int) {
-        Toast.makeText(requireContext(),"$bookId", Toast.LENGTH_SHORT).show()
+        val bookInfo = viewModel.booksArray.value?.get(bookId) as JSONObject
+        val currentBook = BookItem(id = bookInfo.getInt("id"),
+            name = bookInfo.getString("name"),
+            author = bookInfo.getString("author"),
+            summary = bookInfo.getString("summary"),
+            genre = bookInfo.getString("genre"),
+            cover_url = bookInfo.getString("cover_url"),
+            views = bookInfo.getString("views"),
+            likes = bookInfo.getString("likes"),
+            quotes = bookInfo.getString("quotes"))
+
+        findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToDetailsFragment(currentBook, viewModel.recommendedBooks.value!!.toTypedArray()))
     }
 
     override fun onBoolClick(bookInfo: BookItem) {
-        Toast.makeText(requireContext(),"${bookInfo.name}", Toast.LENGTH_SHORT).show()
-
+        findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToDetailsFragment(bookInfo, viewModel.recommendedBooks.value!!.toTypedArray()))
     }
 }

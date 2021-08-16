@@ -18,6 +18,7 @@ class HomeViewModel : ViewModel() {
     val youWillLikeSection = MutableLiveData<JSONArray>()
     val genreLists = MutableLiveData<MutableMap<String, MutableList<BookItem>>>()
     val bannerList = MutableLiveData<List<SlideItem>>()
+    val recommendedBooks = MutableLiveData<List<BookItem>>()
 
     fun sortJson() {
         booksArray.value = myJsonData.value?.getJSONArray("books")
@@ -26,6 +27,7 @@ class HomeViewModel : ViewModel() {
 
         val numberOfBooks = booksArray.value?.length()
         val numberOfSlides = topBannerSlidesArray.value?.length()
+        val numberOfRecommended = youWillLikeSection.value?.length()
         if (numberOfBooks != null) {
             val existingGenre = mutableSetOf<String>()
             var newGenreList = mutableMapOf<String, MutableList<BookItem>>()
@@ -78,6 +80,35 @@ class HomeViewModel : ViewModel() {
                 newSlidesList.add(SlideItem(id, bookId, imageString))
             }
             bannerList.value = newSlidesList
+        }
+
+        if (numberOfRecommended != null) {
+            val newRecommendedList = mutableListOf<BookItem>()
+            val youWillLikeList  = mutableListOf<Int>()
+            for (i in 0 until numberOfRecommended) {
+
+                youWillLikeList.add(youWillLikeSection.value!!.getInt(i))
+
+            }
+
+            for (bookId in youWillLikeList) {
+                val bookInfo = booksArray.value?.get(bookId) as JSONObject
+
+                newRecommendedList.add(
+                    BookItem(
+                        id = bookInfo.getInt("id"),
+                        name = bookInfo.getString("name"),
+                        author = bookInfo.getString("author"),
+                        summary = bookInfo.getString("summary"),
+                        genre = bookInfo.getString("genre"),
+                        cover_url = bookInfo.getString("cover_url"),
+                        views = bookInfo.getString("views"),
+                        likes = bookInfo.getString("likes"),
+                        quotes = bookInfo.getString("quotes")
+                    )
+                )
+            }
+            recommendedBooks.value = newRecommendedList
         }
 
 

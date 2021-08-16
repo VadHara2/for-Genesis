@@ -133,7 +133,7 @@ class GenreAdapter(
 
         fun bind(booksList: List<BookItem>, isLast: Boolean) {
 
-            val booksAdapter = BookAdapter(bookListener)
+            val booksAdapter = BookAdapter(bookListener, false)
 
             binding.apply {
                 recyclerViewBooks.apply {

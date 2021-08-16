@@ -1,5 +1,6 @@
 package com.books.app.ui.home
 
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -10,7 +11,7 @@ import com.books.app.databinding.BookItemBinding
 import com.books.app.databinding.GenreItemBinding
 import com.bumptech.glide.Glide
 
-class BookAdapter(private val listener:OnBookClickListener) : ListAdapter<BookItem, BookAdapter.BookViewHolder>(GenreComparator()) {
+class BookAdapter(private val listener:OnBookClickListener, private val isTextBlack:Boolean) : ListAdapter<BookItem, BookAdapter.BookViewHolder>(GenreComparator()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BookViewHolder {
         val binding = BookItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -39,6 +40,11 @@ class BookAdapter(private val listener:OnBookClickListener) : ListAdapter<BookIt
                     .into(bookImg)
 
                 bookName.text = book.name
+
+                if (isTextBlack) {
+                    bookName.setTextColor(Color.parseColor("#393637"))
+                    bookName.alpha = 1f
+                }
             }
         }
 
