@@ -3,12 +3,17 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Android Projects/for-Genesis/app/src/main/res/drawable/my_selected_indicator.xml" value="0.20052083333333334" />
+        <entry key="..\:/Android Projects/for-Genesis/app/src/main/res/drawable/my_unselected_indicator.xml" value="0.20052083333333334" />
         <entry key="..\:/Android Projects/for-Genesis/app/src/main/res/layout/activity_home.xml" value="0.14375" />
         <entry key="..\:/Android Projects/for-Genesis/app/src/main/res/layout/activity_main.xml" value="0.264" />
         <entry key="..\:/Android Projects/for-Genesis/app/src/main/res/layout/activity_splash.xml" value="0.20104166666666667" />
+        <entry key="..\:/Android Projects/for-Genesis/app/src/main/res/layout/banner_item.xml" value="0.2" />
         <entry key="..\:/Android Projects/for-Genesis/app/src/main/res/layout/book_item.xml" value="0.4" />
         <entry key="..\:/Android Projects/for-Genesis/app/src/main/res/layout/fragment_home.xml" value="0.20416666666666666" />
         <entry key="..\:/Android Projects/for-Genesis/app/src/main/res/layout/genre_item.xml" value="0.20104166666666667" />
+        <entry key="..\:/Android Projects/for-Genesis/app/src/main/res/layout/header_item.xml" value="0.20104166666666667" />
+        <entry key="..\:/Android Projects/for-Genesis/app/src/main/res/layout/holder_for_banner.xml" value="0.20104166666666667" />
       </map>
     </option>
   </component>

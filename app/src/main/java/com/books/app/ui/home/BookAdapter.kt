@@ -10,7 +10,7 @@ import com.books.app.databinding.BookItemBinding
 import com.books.app.databinding.GenreItemBinding
 import com.bumptech.glide.Glide
 
-class BookAdapter : ListAdapter<BookItem, BookAdapter.BookViewHolder>(GenreComparator()) {
+class BookAdapter(private val listener:OnBookClickListener) : ListAdapter<BookItem, BookAdapter.BookViewHolder>(GenreComparator()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BookViewHolder {
         val binding = BookItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -25,10 +25,15 @@ class BookAdapter : ListAdapter<BookItem, BookAdapter.BookViewHolder>(GenreCompa
     }
 
 
-    class BookViewHolder(val binding: BookItemBinding) : RecyclerView.ViewHolder(binding.root) {
+    inner class BookViewHolder(val binding: BookItemBinding) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(book:BookItem) {
             binding.apply {
+
+                root.setOnClickListener {
+                    listener.onBoolClick(book)
+                }
+
                 Glide.with(bookImg)
                     .load(book.cover_url)
                     .into(bookImg)
@@ -45,5 +50,9 @@ class BookAdapter : ListAdapter<BookItem, BookAdapter.BookViewHolder>(GenreCompa
 
         override fun areContentsTheSame(oldItem: BookItem, newItem: BookItem) =
             oldItem == newItem
+    }
+
+    interface OnBookClickListener{
+        fun onBoolClick(bookInfo:BookItem)
     }
 }

@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.books.app.data.BookItem
+import com.books.app.data.SlideItem
 import org.json.JSONArray
 import org.json.JSONObject
 
@@ -16,6 +17,7 @@ class HomeViewModel : ViewModel() {
     val topBannerSlidesArray = MutableLiveData<JSONArray>()
     val youWillLikeSection = MutableLiveData<JSONArray>()
     val genreLists = MutableLiveData<MutableMap<String, MutableList<BookItem>>>()
+    val bannerList = MutableLiveData<List<SlideItem>>()
 
     fun sortJson() {
         booksArray.value = myJsonData.value?.getJSONArray("books")
@@ -23,6 +25,7 @@ class HomeViewModel : ViewModel() {
         youWillLikeSection.value = myJsonData.value?.getJSONArray("you_will_like_section")
 
         val numberOfBooks = booksArray.value?.length()
+        val numberOfSlides = topBannerSlidesArray.value?.length()
         if (numberOfBooks != null) {
             val existingGenre = mutableSetOf<String>()
             var newGenreList = mutableMapOf<String, MutableList<BookItem>>()
@@ -63,6 +66,18 @@ class HomeViewModel : ViewModel() {
                 }
                 genreLists.value = newGenreList
             }
+        }
+
+        if (numberOfSlides != null) {
+            val newSlidesList = mutableListOf<SlideItem>()
+            for (slidesId in 0 until numberOfSlides) {
+                val slideInfo = topBannerSlidesArray.value?.get(slidesId) as JSONObject
+                val imageString = slideInfo.getString("cover")
+                val id = slideInfo.getInt("id")
+                val bookId = slideInfo.getInt("book_id")
+                newSlidesList.add(SlideItem(id, bookId, imageString))
+            }
+            bannerList.value = newSlidesList
         }
 
 

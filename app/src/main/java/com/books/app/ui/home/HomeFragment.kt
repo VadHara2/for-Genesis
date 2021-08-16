@@ -12,6 +12,8 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.books.app.R
+import com.books.app.data.BookItem
+import com.books.app.data.SlideItem
 import com.books.app.databinding.FragmentHomeBinding
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.remoteconfig.ktx.get
@@ -20,7 +22,7 @@ import com.google.firebase.remoteconfig.ktx.remoteConfigSettings
 import org.json.JSONObject
 
 private const val TAG = "HomeFragment"
-class HomeFragment:Fragment(R.layout.fragment_home) {
+class HomeFragment:Fragment(R.layout.fragment_home), BannerAdapter.OnSlideClickListener, BookAdapter.OnBookClickListener {
 
     private val viewModel: HomeViewModel by viewModels()
 
@@ -30,7 +32,7 @@ class HomeFragment:Fragment(R.layout.fragment_home) {
         savedInstanceState: Bundle?
     ): View {
         val binding: FragmentHomeBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_home, container, false)
-        val genreAdapter = GenreAdapter(getNavigationBarHeight())
+        val genreAdapter = GenreAdapter(getNavigationBarHeight(), getStatusBarHeight(), this, this)
         val remoteConfig = Firebase.remoteConfig
         val configSettings = remoteConfigSettings {
             minimumFetchIntervalInSeconds = 3600
@@ -58,13 +60,12 @@ class HomeFragment:Fragment(R.layout.fragment_home) {
         })
 
         binding.apply {
-            statusBar.layoutParams.height = getStatusBarHeight()
             recyclerView.apply {
                 adapter = genreAdapter
                 layoutManager = LinearLayoutManager(requireContext())
 
                 viewModel.genreLists.observe(requireActivity(), Observer { result ->
-                    genreAdapter.submitList(result.values.toList())
+                    genreAdapter.submitMyCustomList(result.values.toList(), viewModel.bannerList.value?: listOf(SlideItem(-1,-1,"-1")))
 
                     for (i in result.values.toList()) {
                         Log.i(TAG, "onCreateViewwwwww: $i")
@@ -72,7 +73,6 @@ class HomeFragment:Fragment(R.layout.fragment_home) {
 
 //                    Log.i(TAG, "onCreateViewwwwwwwwwww: ${result}")
                 })
-
 
             }
         }
@@ -99,4 +99,12 @@ class HomeFragment:Fragment(R.layout.fragment_home) {
         return result
     }
 
+    override fun onSlideClick(bookId: Int) {
+        Toast.makeText(requireContext(),"$bookId", Toast.LENGTH_SHORT).show()
+    }
+
+    override fun onBoolClick(bookInfo: BookItem) {
+        Toast.makeText(requireContext(),"${bookInfo.name}", Toast.LENGTH_SHORT).show()
+
+    }
 }
