@@ -30,7 +30,7 @@ class HomeFragment:Fragment(R.layout.fragment_home) {
         savedInstanceState: Bundle?
     ): View {
         val binding: FragmentHomeBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_home, container, false)
-        val genreAdapter = GenreAdapter()
+        val genreAdapter = GenreAdapter(getNavigationBarHeight())
         val remoteConfig = Firebase.remoteConfig
         val configSettings = remoteConfigSettings {
             minimumFetchIntervalInSeconds = 3600
@@ -58,6 +58,7 @@ class HomeFragment:Fragment(R.layout.fragment_home) {
         })
 
         binding.apply {
+            statusBar.layoutParams.height = getStatusBarHeight()
             recyclerView.apply {
                 adapter = genreAdapter
                 layoutManager = LinearLayoutManager(requireContext())
@@ -78,6 +79,24 @@ class HomeFragment:Fragment(R.layout.fragment_home) {
 
 
         return binding.root
+    }
+
+    private fun getStatusBarHeight(): Int {
+        var result = 0
+        val resourceId = resources.getIdentifier("status_bar_height", "dimen", "android")
+        if (resourceId > 0) {
+            result = resources.getDimensionPixelSize(resourceId)
+        }
+        return result
+    }
+
+    fun getNavigationBarHeight():Int {
+        var result = 0
+        val resourceId: Int = resources.getIdentifier("navigation_bar_height", "dimen", "android")
+        if (resourceId > 0) {
+            result = resources.getDimensionPixelSize(resourceId)
+        }
+        return result
     }
 
 }

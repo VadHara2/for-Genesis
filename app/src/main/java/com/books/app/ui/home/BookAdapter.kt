@@ -32,6 +32,8 @@ class BookAdapter : ListAdapter<BookItem, BookAdapter.BookViewHolder>(GenreCompa
                 Glide.with(bookImg)
                     .load(book.cover_url)
                     .into(bookImg)
+
+                bookName.text = book.name
             }
         }
 
