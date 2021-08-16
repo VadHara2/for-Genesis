@@ -1,15 +1,17 @@
 package com.books.app.ui.home
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.books.app.data.BookItem
 import com.books.app.databinding.GenreItemBinding
 import com.bumptech.glide.Glide
 
-class GenreAdapter : ListAdapter<List<BookItem>, GenreAdapter.GenreViewHolder>(GenreComparator()) {
+class GenreAdapter() : ListAdapter<List<BookItem>, GenreAdapter.GenreViewHolder>(GenreComparator()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GenreViewHolder {
         val binding = GenreItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -27,10 +29,17 @@ class GenreAdapter : ListAdapter<List<BookItem>, GenreAdapter.GenreViewHolder>(G
     class GenreViewHolder(val binding: GenreItemBinding) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(booksList:List<BookItem>) {
+
+            val booksAdapter = BookAdapter()
+
             binding.apply {
-                Glide.with(firstBookImg)
-                    .load(booksList[0].cover_url)
-                    .into(firstBookImg)
+                recyclerViewBooks.apply {
+                    adapter = booksAdapter
+                    layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+                }
+
+                booksAdapter.submitList(booksList)
+
             }
         }
 
