@@ -1,7 +1,6 @@
 package com.books.app.ui.home
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,10 +19,13 @@ import com.google.firebase.ktx.Firebase
 import com.google.firebase.remoteconfig.ktx.get
 import com.google.firebase.remoteconfig.ktx.remoteConfig
 import com.google.firebase.remoteconfig.ktx.remoteConfigSettings
+import dagger.hilt.android.AndroidEntryPoint
 import org.json.JSONObject
 
-private const val TAG = "HomeFragment"
-class HomeFragment:Fragment(R.layout.fragment_home), BannerAdapter.OnSlideClickListener, BookAdapter.OnBookClickListener {
+
+@AndroidEntryPoint
+class HomeFragment : Fragment(R.layout.fragment_home), BannerAdapter.OnSlideClickListener,
+    BookAdapter.OnBookClickListener {
 
     private val viewModel: HomeViewModel by viewModels()
 
@@ -32,29 +34,33 @@ class HomeFragment:Fragment(R.layout.fragment_home), BannerAdapter.OnSlideClickL
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val binding: FragmentHomeBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_home, container, false)
+        val binding: FragmentHomeBinding =
+            DataBindingUtil.inflate(inflater, R.layout.fragment_home, container, false)
         val genreAdapter = GenreAdapter(getNavigationBarHeight(), getStatusBarHeight(), this, this)
         val remoteConfig = Firebase.remoteConfig
         val configSettings = remoteConfigSettings {
             minimumFetchIntervalInSeconds = 3600
         }
         remoteConfig.setConfigSettingsAsync(configSettings)
-
         remoteConfig.fetchAndActivate()
             .addOnCompleteListener(requireActivity()) { task ->
                 if (task.isSuccessful) {
                     val updated = task.result
-                    Log.d(TAG, "Config params updated: $updated")
-                    Toast.makeText(requireContext(), "Fetch and activate succeeded",
-                        Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        requireContext(), "Fetch and activate succeeded",
+                        Toast.LENGTH_SHORT
+                    ).show()
+
+                    viewModel.myJsonData.value = JSONObject(remoteConfig.get("json_data").asString())
+
                 } else {
-                    Toast.makeText(requireContext(), "Fetch failed",
-                        Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        requireContext(), "Fetch failed",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             }
 
-        viewModel.myJsonData.value = JSONObject(remoteConfig.get("json_data").asString())
-        Log.i(TAG, "onCreateView: ${JSONObject(remoteConfig.get("json_data").asString())}")
 
         viewModel.myJsonData.observe(requireActivity(), Observer {
             viewModel.sortJson()
@@ -66,13 +72,11 @@ class HomeFragment:Fragment(R.layout.fragment_home), BannerAdapter.OnSlideClickL
                 layoutManager = LinearLayoutManager(requireContext())
 
                 viewModel.genreLists.observe(requireActivity(), Observer { result ->
-                    genreAdapter.submitMyCustomList(result.values.toList(), viewModel.bannerList.value?: listOf(SlideItem(-1,-1,"-1")))
 
-                    for (i in result.values.toList()) {
-                        Log.i(TAG, "onCreateViewwwwww: $i")
-                    }
-
-//                    Log.i(TAG, "onCreateViewwwwwwwwwww: ${result}")
+                    genreAdapter.submitMyCustomList(
+                        result.values.toList(),
+                        viewModel.bannerList.value ?: listOf(SlideItem(-1, -1, "-1"))
+                    )
                 })
 
             }
@@ -91,7 +95,7 @@ class HomeFragment:Fragment(R.layout.fragment_home), BannerAdapter.OnSlideClickL
         return result
     }
 
-    private fun getNavigationBarHeight():Int {
+    private fun getNavigationBarHeight(): Int {
         var result = 0
         val resourceId: Int = resources.getIdentifier("navigation_bar_height", "dimen", "android")
         if (resourceId > 0) {
@@ -102,7 +106,8 @@ class HomeFragment:Fragment(R.layout.fragment_home), BannerAdapter.OnSlideClickL
 
     override fun onSlideClick(bookId: Int) {
         val bookInfo = viewModel.booksArray.value?.get(bookId) as JSONObject
-        val currentBook = BookItem(id = bookInfo.getInt("id"),
+        val currentBook = BookItem(
+            id = bookInfo.getInt("id"),
             name = bookInfo.getString("name"),
             author = bookInfo.getString("author"),
             summary = bookInfo.getString("summary"),
@@ -110,12 +115,24 @@ class HomeFragment:Fragment(R.layout.fragment_home), BannerAdapter.OnSlideClickL
             cover_url = bookInfo.getString("cover_url"),
             views = bookInfo.getString("views"),
             likes = bookInfo.getString("likes"),
-            quotes = bookInfo.getString("quotes"))
+            quotes = bookInfo.getString("quotes")
+        )
 
-        findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToDetailsFragment(currentBook, viewModel.recommendedBooks.value!!.toTypedArray()))
+        findNavController().navigate(
+            HomeFragmentDirections.actionHomeFragmentToDetailsFragment(
+                currentBook,
+                viewModel.recommendedBooks.value!!.toTypedArray()
+            )
+        )
     }
 
     override fun onBoolClick(bookInfo: BookItem) {
-        findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToDetailsFragment(bookInfo, viewModel.recommendedBooks.value!!.toTypedArray()))
+        findNavController().navigate(
+            HomeFragmentDirections.actionHomeFragmentToDetailsFragment(
+                bookInfo,
+                viewModel.recommendedBooks.value!!.toTypedArray()
+            )
+        )
     }
+
 }

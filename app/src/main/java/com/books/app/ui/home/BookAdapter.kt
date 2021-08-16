@@ -8,10 +8,10 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.books.app.data.BookItem
 import com.books.app.databinding.BookItemBinding
-import com.books.app.databinding.GenreItemBinding
 import com.bumptech.glide.Glide
 
-class BookAdapter(private val listener:OnBookClickListener, private val isTextBlack:Boolean) : ListAdapter<BookItem, BookAdapter.BookViewHolder>(GenreComparator()) {
+class BookAdapter(private val listener: OnBookClickListener, private val isTextBlack: Boolean) :
+    ListAdapter<BookItem, BookAdapter.BookViewHolder>(BookComparator()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BookViewHolder {
         val binding = BookItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -26,9 +26,10 @@ class BookAdapter(private val listener:OnBookClickListener, private val isTextBl
     }
 
 
-    inner class BookViewHolder(val binding: BookItemBinding) : RecyclerView.ViewHolder(binding.root) {
+    inner class BookViewHolder(val binding: BookItemBinding) :
+        RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(book:BookItem) {
+        fun bind(book: BookItem) {
             binding.apply {
 
                 root.setOnClickListener {
@@ -50,7 +51,7 @@ class BookAdapter(private val listener:OnBookClickListener, private val isTextBl
 
     }
 
-    class GenreComparator : DiffUtil.ItemCallback<BookItem>() {
+    class BookComparator : DiffUtil.ItemCallback<BookItem>() {
         override fun areItemsTheSame(oldItem: BookItem, newItem: BookItem) =
             oldItem.id == newItem.id
 
@@ -58,7 +59,7 @@ class BookAdapter(private val listener:OnBookClickListener, private val isTextBl
             oldItem == newItem
     }
 
-    interface OnBookClickListener{
-        fun onBoolClick(bookInfo:BookItem)
+    interface OnBookClickListener {
+        fun onBoolClick(bookInfo: BookItem)
     }
 }

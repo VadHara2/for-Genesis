@@ -7,7 +7,9 @@ import com.books.app.R
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.ktx.Firebase
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
     private lateinit var firebaseAnalytics: FirebaseAnalytics
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -21,6 +23,6 @@ class MainActivity : AppCompatActivity() {
 
         firebaseAnalytics = Firebase.analytics
         firebaseAnalytics.logEvent("FirstStart", null)
-        
+
     }
 }

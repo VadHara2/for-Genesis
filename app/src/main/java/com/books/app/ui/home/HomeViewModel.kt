@@ -1,21 +1,22 @@
 package com.books.app.ui.home
 
-import android.util.Log
+
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.books.app.data.BookItem
 import com.books.app.data.SlideItem
+import dagger.hilt.android.lifecycle.HiltViewModel
 import org.json.JSONArray
 import org.json.JSONObject
+import javax.inject.Inject
 
-private const val TAG = "HomeViewModel"
-
-class HomeViewModel : ViewModel() {
+@HiltViewModel
+class HomeViewModel @Inject constructor() : ViewModel() {
 
     val myJsonData = MutableLiveData<JSONObject>()
     val booksArray = MutableLiveData<JSONArray>()
-    val topBannerSlidesArray = MutableLiveData<JSONArray>()
-    val youWillLikeSection = MutableLiveData<JSONArray>()
+    private val topBannerSlidesArray = MutableLiveData<JSONArray>()
+    private val youWillLikeSection = MutableLiveData<JSONArray>()
     val genreLists = MutableLiveData<MutableMap<String, MutableList<BookItem>>>()
     val bannerList = MutableLiveData<List<SlideItem>>()
     val recommendedBooks = MutableLiveData<List<BookItem>>()
@@ -28,13 +29,27 @@ class HomeViewModel : ViewModel() {
         val numberOfBooks = booksArray.value?.length()
         val numberOfSlides = topBannerSlidesArray.value?.length()
         val numberOfRecommended = youWillLikeSection.value?.length()
+
+
+        if (numberOfSlides != null) {
+            val newSlidesList = mutableListOf<SlideItem>()
+            for (slidesId in 0 until numberOfSlides) {
+                val slideInfo = topBannerSlidesArray.value?.get(slidesId) as JSONObject
+                val imageString = slideInfo.getString("cover")
+                val id = slideInfo.getInt("id")
+                val bookId = slideInfo.getInt("book_id")
+                newSlidesList.add(SlideItem(id, bookId, imageString))
+            }
+            bannerList.value = newSlidesList
+
+        }
+
         if (numberOfBooks != null) {
             val existingGenre = mutableSetOf<String>()
             var newGenreList = mutableMapOf<String, MutableList<BookItem>>()
             for (bookId in 1 until numberOfBooks) {
                 val bookInfo = booksArray.value?.get(bookId) as JSONObject
                 val genreString = bookInfo.getString("genre")
-                Log.i(TAG, "sortJson: ${genreString}")
 
                 if (existingGenre.contains(genreString)) {
                     newGenreList["$genreString"]?.add(
@@ -70,21 +85,10 @@ class HomeViewModel : ViewModel() {
             }
         }
 
-        if (numberOfSlides != null) {
-            val newSlidesList = mutableListOf<SlideItem>()
-            for (slidesId in 0 until numberOfSlides) {
-                val slideInfo = topBannerSlidesArray.value?.get(slidesId) as JSONObject
-                val imageString = slideInfo.getString("cover")
-                val id = slideInfo.getInt("id")
-                val bookId = slideInfo.getInt("book_id")
-                newSlidesList.add(SlideItem(id, bookId, imageString))
-            }
-            bannerList.value = newSlidesList
-        }
 
         if (numberOfRecommended != null) {
             val newRecommendedList = mutableListOf<BookItem>()
-            val youWillLikeList  = mutableListOf<Int>()
+            val youWillLikeList = mutableListOf<Int>()
             for (i in 0 until numberOfRecommended) {
 
                 youWillLikeList.add(youWillLikeSection.value!!.getInt(i))

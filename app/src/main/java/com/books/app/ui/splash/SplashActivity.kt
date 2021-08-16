@@ -7,9 +7,10 @@ import android.os.Handler
 import android.os.Looper
 import android.view.WindowManager
 import com.books.app.databinding.ActivitySplashBinding
-
 import com.books.app.ui.MainActivity
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class SplashActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

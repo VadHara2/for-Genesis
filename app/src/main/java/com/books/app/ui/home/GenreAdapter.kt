@@ -1,6 +1,5 @@
 package com.books.app.ui.home
 
-import android.content.Context
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -14,13 +13,11 @@ import com.books.app.data.SlideItem
 import com.books.app.databinding.BannerItemBinding
 import com.books.app.databinding.GenreItemBinding
 import com.books.app.databinding.HeaderItemBinding
-import com.bumptech.glide.Glide
-import kotlin.math.roundToInt
+
 
 private const val ITEM_VIEW_TYPE_HEADER = 0
 private const val ITEM_VIEW_TYPE_BANNER = 1
 private const val ITEM_VIEW_TYPE_GENRE = 2
-private const val TAG = "GenreAdapter"
 
 class GenreAdapter(
     private val navigationBarHeight: Int,
@@ -32,8 +29,6 @@ class GenreAdapter(
 
     fun submitMyCustomList(genreList: List<MutableList<BookItem>>, bannerList: List<SlideItem>) {
         val superList = mutableListOf<AdapterItem>()
-
-        Log.i(TAG, "submitMyCustomList: ${bannerList}")
 
         superList.add(AdapterItem.Header("Library"))
         superList.add(AdapterItem.Banner(bannerList))
@@ -129,7 +124,8 @@ class GenreAdapter(
         }
     }
 
-    inner class GenreViewHolder(val binding: GenreItemBinding) : RecyclerView.ViewHolder(binding.root) {
+    inner class GenreViewHolder(val binding: GenreItemBinding) :
+        RecyclerView.ViewHolder(binding.root) {
 
         fun bind(booksList: List<BookItem>, isLast: Boolean) {
 

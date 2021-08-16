@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -16,17 +15,20 @@ import com.books.app.data.BookItem
 import com.books.app.databinding.FragmentDetailsBinding
 import com.books.app.ui.home.BookAdapter
 import com.bumptech.glide.Glide
+import dagger.hilt.android.AndroidEntryPoint
 
-class DetailsFragment:Fragment(R.layout.fragment_details), BookAdapter.OnBookClickListener {
+@AndroidEntryPoint
+class DetailsFragment : Fragment(R.layout.fragment_details), BookAdapter.OnBookClickListener {
 
-    private val args : DetailsFragmentArgs by navArgs()
+    private val args: DetailsFragmentArgs by navArgs()
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val binding:FragmentDetailsBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_details, container, false)
+        val binding: FragmentDetailsBinding =
+            DataBindingUtil.inflate(inflater, R.layout.fragment_details, container, false)
         val myAdapter = BookAdapter(this, true)
         binding.apply {
             statusBar.layoutParams.height = getStatusBarHeight()
@@ -60,7 +62,7 @@ class DetailsFragment:Fragment(R.layout.fragment_details), BookAdapter.OnBookCli
         return result
     }
 
-    private fun getNavigationBarHeight():Int {
+    private fun getNavigationBarHeight(): Int {
         var result = 0
         val resourceId: Int = resources.getIdentifier("navigation_bar_height", "dimen", "android")
         if (resourceId > 0) {
@@ -70,6 +72,6 @@ class DetailsFragment:Fragment(R.layout.fragment_details), BookAdapter.OnBookCli
     }
 
     override fun onBoolClick(bookInfo: BookItem) {
-        Toast.makeText(requireContext(),"${bookInfo.name}", Toast.LENGTH_SHORT).show()
+        Toast.makeText(requireContext(), "${bookInfo.name}", Toast.LENGTH_SHORT).show()
     }
 }

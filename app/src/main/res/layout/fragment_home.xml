@@ -9,11 +9,6 @@
         android:layout_height="match_parent"
         android:background="#101010">
 
-        <TextView
-            android:id="@+id/myData"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_view"
@@ -24,6 +19,14 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:listitem="@layout/genre_item" />
+
+        <TextView
+            android:visibility="gone"
+            android:id="@+id/myData"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:textColor="#da251c"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
